@@ -8,8 +8,10 @@ import numpy as np
 import difflib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
 # Set Streamlit page configuration
 st.set_page_config(page_title="Movie Recommendation System", page_icon="🎬", initial_sidebar_state="expanded")
+
 # Load movie data
 data = pd.read_csv('movies1.csv')
 
@@ -19,8 +21,7 @@ for feature in sel_features:
     data[feature] = data[feature].fillna('')
 
 # Combine features
-combine_features = data['genres'] + ' ' + data['keywords'] + ' ' + data['tagline'] + ' ' + data['cast'] + ' ' + data[
-    'director']
+combine_features = data['genres'] + ' ' + data['keywords'] + ' ' + data['tagline'] + ' ' + data['cast'] + ' ' + data['director']
 
 # Convert text data to feature vectors
 vectorizer = TfidfVectorizer()
@@ -53,9 +54,10 @@ def main():
 
         # Display recommended movies and their posters with additional information
         st.header("Movies suggested for you:")
+        counter = 0  # Counter variable to restrict the number of recommendations
         for index, movie in enumerate(sorted_similar_movies):
             title_from_index = data[data.index == movie[0]]['title'].values[0]
-            if index < 20:
+            if counter < 20:  # Display only 10 recommendations
                 search = omdb.search_movie(title_from_index)
                 if search and 'poster' in search[0]:
                     imdb_id = search[0]['imdb_id']
@@ -72,9 +74,9 @@ def main():
                         st.write(f"**Rating:** {rating}")
                         st.write(f"**Description:** {description}")
                         st.markdown(imdb_link)
+                        counter += 1  # Increment the counter
             else:
-                st.write(f"No poster available for {title_from_index}")
-
+                break  # Exit the loop after displaying 10 recommendations
 
 # Run the Streamlit app
 if __name__ == "__main__":
