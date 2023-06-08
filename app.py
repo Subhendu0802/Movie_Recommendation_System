@@ -8,7 +8,8 @@ import numpy as np
 import difflib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
+# Set Streamlit page configuration
+st.set_page_config(page_title="Movie Recommendation System", page_icon="🎬", initial_sidebar_state="expanded")
 # Load movie data
 data = pd.read_csv('movies1.csv')
 
